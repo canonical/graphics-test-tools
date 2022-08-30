@@ -22,7 +22,6 @@ parts:
     meson-parameters:
       - --prefix=/usr
     source: https://github.com/ascent12/drm_info.git
-    source-tag: v2.3.0
     override-pull: |
       craftctl default
       craftctl set version=$(git describe --tags)
