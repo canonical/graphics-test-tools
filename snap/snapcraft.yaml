@@ -1,0 +1,35 @@
+name: drm-info
+base: core22
+adopt-info: drm-info
+summary: Dump information about DRM devices
+description: |
+  List the capabilities and current settings of this device's DRM (Direct Rendering Manager)
+  hardware.
+
+grade: stable
+confinement: strict
+
+apps:
+  drm-info:
+    plugs:
+      - opengl
+    command: usr/bin/drm_info
+
+parts:
+  drm-info:
+    # See 'snapcraft plugins'
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+    source: https://github.com/ascent12/drm_info.git
+    source-tag: v2.3.0
+    override-pull: |
+      craftctl default
+      craftctl set version=$(git describe --tags)
+    build-packages:
+      - meson
+      - libjson-c-dev
+      - libpci-dev
+      - pkg-config
+    stage-packages:
+      - libpci3
