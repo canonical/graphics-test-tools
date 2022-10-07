@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec glmark2-es2-wayland --data-path ${SNAP}/usr/share/glmark2 "$@"

@@ -1,34 +1,104 @@
-name: drm-info
-base: core22
-adopt-info: drm-info
-summary: Dump information about DRM devices
+name: graphics-debug-tools
+version: "20.04"
+base: core20
+summary: Tools helpful in debugging graphics stacks
 description: |
-  List the capabilities and current settings of this device's DRM (Direct Rendering Manager)
-  hardware.
+  - drm-info:
+    List the capabilities and current settings of this device's DRM
+    (Direct Rendering Manager) hardware.
+  - glmark2-es2-wayland:
+    OpenGL ES 2.0 Wayland benchmark.
+  - eglinfo:
+    Dump information about the available EGL setup.
 
 grade: stable
 confinement: strict
+
+environment:
+  # Setup EGL from the plugs
+  LD_LIBRARY_PATH:    $SNAP/graphics/lib
+  LIBGL_DRIVERS_PATH: $SNAP/graphics/dri
+  __EGL_VENDOR_LIBRARY_DIRS: $SNAP/graphics/glvnd/egl_vendor.d
+
+layout:
+  /usr/share/libdrm:  # Needed by mesa-core20 on ARM GPUs
+    bind: $SNAP/graphics/libdrm
+  /usr/share/drirc.d:
+    bind: $SNAP/graphics/drirc.d
+
+plugs:
+  graphics-core20:
+    interface: content
+    target: $SNAP/graphics
+    default-provider: mesa-core20
 
 apps:
   drm-info:
     plugs:
       - opengl
-    command: usr/bin/drm_info
+    command: usr/local/bin/drm_info
+
+  eglinfo:
+    plugs:
+      - opengl
+      - wayland
+    command-chain:
+      - bin/wayland-launch
+    command: usr/bin/eglinfo
+
+  glmark2-es2-wayland:
+    plugs:
+      - opengl
+      - wayland
+    command-chain:
+      - bin/wayland-launch
+    command: glmark2-wayland-wrapper
 
 parts:
+  glue:
+    plugin: dump
+    source: glue
+
+  mir-kiosk-snap-launch:
+      plugin: dump
+      source: https://github.com/MirServer/mir-kiosk-snap-launch.git
+      override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl wayland
+      stage-packages:
+        - inotify-tools
+
   drm-info:
-    # See 'snapcraft plugins'
     plugin: meson
-    meson-parameters:
-      - --prefix=/usr
     source: https://github.com/ascent12/drm_info.git
-    override-pull: |
-      craftctl default
-      craftctl set version=$(git describe --tags)
+    source-tag: v2.3.0
     build-packages:
       - meson
+      - libdrm-dev
       - libjson-c-dev
       - libpci-dev
       - pkg-config
     stage-packages:
+      - libdrm2
       - libpci3
+
+  eglinfo:
+    plugin: nil
+    source: .
+    stage-packages:
+      - mesa-utils-extra
+
+  glmark2:
+    plugin: nil
+    source: .
+    stage-packages:
+      - glmark2-es2-wayland
+
+  cleanup:
+    after: [drm-info, eglinfo, glmark2]
+    plugin: nil
+    build-snaps: [ mesa-core20 ]
+    override-prime: |
+      set -eux
+      cd /snap/mesa-core20/current/egl/lib
+      find . -type f,l -exec rm -f $SNAPCRAFT_PRIME/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/{} \;
+      rm -fr "$SNAPCRAFT_PRIME/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/dri"
+      rm -fr "$SNAPCRAFT_PRIME/usr/share/"{bug,doc,doc-base,drirc.d,glvnd,libdrm,lintian,man}
