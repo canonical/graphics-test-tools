@@ -1,4 +1,4 @@
-name: graphics-debug-tools
+name: graphics-test-tools
 version: "20.04"
 base: core20
 summary: Tools helpful in debugging graphics stacks
