@@ -56,6 +56,14 @@ apps:
       - graphics-core22-wrapper
     command: usr/bin/vainfo
 
+  vdpauinfo:
+    plugs:
+      - opengl
+      - x11
+    command-chain:
+      - graphics-core22-wrapper
+    command: usr/bin/vdpauinfo
+
 parts:
   glue:
     plugin: dump
@@ -89,3 +97,8 @@ parts:
     plugin: nil
     stage-packages:
       - vainfo
+
+  vdpauinfo:
+    plugin: nil
+    stage-packages:
+      - vdpauinfo
