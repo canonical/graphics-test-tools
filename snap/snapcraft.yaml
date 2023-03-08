@@ -1,6 +1,6 @@
 name: graphics-test-tools
-version: "20.04"
-base: core20
+version: "22.04"
+base: core22
 summary: Tools helpful in debugging graphics stacks
 description: |
   - drm-info:
@@ -14,35 +14,29 @@ description: |
 grade: stable
 confinement: strict
 
-environment:
-  # Setup EGL from the plugs
-  LD_LIBRARY_PATH:    $SNAP/graphics/lib
-  LIBGL_DRIVERS_PATH: $SNAP/graphics/dri
-  __EGL_VENDOR_LIBRARY_DIRS: $SNAP/graphics/glvnd/egl_vendor.d
-
 layout:
-  /usr/share/libdrm:  # Needed by mesa-core20 on ARM GPUs
+  /usr/share/libdrm:  # Needed by mesa-core22 on ARM GPUs
     bind: $SNAP/graphics/libdrm
   /usr/share/drirc.d:
     bind: $SNAP/graphics/drirc.d
 
 plugs:
-  graphics-core20:
+  graphics-core22:
     interface: content
     target: $SNAP/graphics
-    default-provider: mesa-core20
 
 apps:
   drm-info:
     plugs:
       - opengl
-    command: usr/local/bin/drm_info
+    command: usr/bin/drm_info
 
   eglinfo:
     plugs:
       - opengl
       - wayland
     command-chain:
+      - graphics-core22-wrapper
       - bin/wayland-launch
     command: usr/bin/eglinfo
 
@@ -51,6 +45,7 @@ apps:
       - opengl
       - wayland
     command-chain:
+      - graphics-core22-wrapper
       - bin/wayland-launch
     command: glmark2-wayland-wrapper
 
@@ -62,23 +57,14 @@ parts:
   mir-kiosk-snap-launch:
       plugin: dump
       source: https://github.com/MirServer/mir-kiosk-snap-launch.git
-      override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl wayland
+      override-build:  ${CRAFT_PART_BUILD}/build-with-plugs.sh opengl wayland
       stage-packages:
         - inotify-tools
 
   drm-info:
-    plugin: meson
-    source: https://github.com/ascent12/drm_info.git
-    source-tag: v2.3.0
-    build-packages:
-      - meson
-      - libdrm-dev
-      - libjson-c-dev
-      - libpci-dev
-      - pkg-config
+    plugin: nil
     stage-packages:
-      - libdrm2
-      - libpci3
+      - drm-info
 
   eglinfo:
     plugin: nil
