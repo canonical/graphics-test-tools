@@ -77,14 +77,3 @@ parts:
     source: .
     stage-packages:
       - glmark2-es2-wayland
-
-  cleanup:
-    after: [drm-info, eglinfo, glmark2]
-    plugin: nil
-    build-snaps: [ mesa-core20 ]
-    override-prime: |
-      set -eux
-      cd /snap/mesa-core20/current/egl/lib
-      find . -type f,l -exec rm -f $SNAPCRAFT_PRIME/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/{} \;
-      rm -fr "$SNAPCRAFT_PRIME/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/dri"
-      rm -fr "$SNAPCRAFT_PRIME/usr/share/"{bug,doc,doc-base,drirc.d,glvnd,libdrm,lintian,man}
