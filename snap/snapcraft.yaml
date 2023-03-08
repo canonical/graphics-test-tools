@@ -49,6 +49,13 @@ apps:
       - bin/wayland-launch
     command: glmark2-wayland-wrapper
 
+  vainfo:
+    plugs:
+      - opengl
+    command-chain:
+      - graphics-core22-wrapper
+    command: usr/bin/vainfo
+
 parts:
   glue:
     plugin: dump
@@ -77,3 +84,8 @@ parts:
     source: .
     stage-packages:
       - glmark2-es2-wayland
+
+  vainfo:
+    plugin: nil
+    stage-packages:
+      - vainfo
