@@ -74,6 +74,22 @@ apps:
       - graphics-core22-wrapper
     command: usr/bin/vdpauinfo
 
+  vulkaninfo:
+    plugs:
+      - opengl
+      - x11
+    command-chain:
+      - graphics-core22-wrapper
+    command: usr/bin/vulkaninfo
+
+  vkcube:
+    plugs:
+      - opengl
+      - x11
+    command-chain:
+      - graphics-core22-wrapper
+    command: usr/bin/vkcube
+
 parts:
   glue:
     plugin: dump
@@ -113,3 +129,8 @@ parts:
     plugin: nil
     stage-packages:
       - vdpauinfo
+
+  vulkan-tools:
+    plugin: nil
+    stage-packages:
+      - vulkan-tools
