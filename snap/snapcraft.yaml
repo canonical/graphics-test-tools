@@ -40,6 +40,14 @@ apps:
       - bin/wayland-launch
     command: usr/bin/eglinfo
 
+  eglinfo-x11:
+    command: usr/bin/eglinfo
+    plugs:
+      - opengl
+      - x11
+    command-chain:
+      - graphics-core22-wrapper
+
   glmark2-es2:
     plugs:
       - opengl
@@ -101,6 +109,8 @@ parts:
       override-build:  ${CRAFT_PART_BUILD}/build-with-plugs.sh opengl wayland
       stage-packages:
         - inotify-tools
+      stage:
+        - -README.md
 
   drm-info:
     plugin: nil
