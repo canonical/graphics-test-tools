@@ -36,7 +36,7 @@ apps:
       - opengl
       - wayland
     command-chain:
-      - graphics-core22-wrapper
+      - bin/graphics-core22-wrapper
       - bin/wayland-launch
     command: usr/bin/eglinfo
 
@@ -46,14 +46,14 @@ apps:
       - opengl
       - x11
     command-chain:
-      - graphics-core22-wrapper
+      - bin/graphics-core22-wrapper
 
   glmark2-es2:
     plugs:
       - opengl
       - x11
     command-chain:
-      - graphics-core22-wrapper
+      - bin/graphics-core22-wrapper
       - glmark2-wrapper
     command: usr/bin/glmark2-es2
 
@@ -62,7 +62,7 @@ apps:
       - opengl
       - wayland
     command-chain:
-      - graphics-core22-wrapper
+      - bin/graphics-core22-wrapper
       - bin/wayland-launch
       - glmark2-wrapper
     command: usr/bin/glmark2-es2-wayland
@@ -71,7 +71,7 @@ apps:
     plugs:
       - opengl
     command-chain:
-      - graphics-core22-wrapper
+      - bin/graphics-core22-wrapper
     command: usr/bin/vainfo
 
   vdpauinfo:
@@ -79,7 +79,7 @@ apps:
       - opengl
       - x11
     command-chain:
-      - graphics-core22-wrapper
+      - bin/graphics-core22-wrapper
     command: usr/bin/vdpauinfo
 
   vulkaninfo:
@@ -87,7 +87,7 @@ apps:
       - opengl
       - x11
     command-chain:
-      - graphics-core22-wrapper
+      - bin/graphics-core22-wrapper
     command: usr/bin/vulkaninfo
 
   vkcube:
@@ -95,7 +95,7 @@ apps:
       - opengl
       - x11
     command-chain:
-      - graphics-core22-wrapper
+      - bin/graphics-core22-wrapper
     command: usr/bin/vkcube
 
 parts:
@@ -144,3 +144,20 @@ parts:
     plugin: nil
     stage-packages:
       - vulkan-tools
+
+  graphics-core22:
+    after:
+      - drm-info
+      - eglinfo
+      - glmark2
+      - vainfo
+      - vdpauinfo
+      - vulkan-tools
+    source: https://github.com/MirServer/graphics-core22.git
+    plugin: dump
+    override-prime: |
+      craftctl default
+      ${CRAFT_PART_SRC}/bin/graphics-core22-cleanup mesa-core22
+      rm -rf ${CRAFT_PRIME}/usr/share/{doc,man}
+    prime:
+      - bin/graphics-core22-wrapper
