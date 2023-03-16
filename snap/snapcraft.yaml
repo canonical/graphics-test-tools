@@ -67,6 +67,14 @@ apps:
       - glmark2-wrapper
     command: usr/bin/glmark2-es2-wayland
 
+  glxinfo:
+    plugs:
+      - opengl
+      - x11
+    command-chain:
+      - bin/graphics-core22-wrapper
+    command: usr/bin/glxinfo
+
   vainfo:
     plugs:
       - opengl
