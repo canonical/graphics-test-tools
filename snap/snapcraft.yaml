@@ -24,6 +24,7 @@ plugs:
   graphics-core22:
     interface: content
     target: $SNAP/graphics
+    default-provider: mesa-core22/edge
 
 apps:
   drm-info:
