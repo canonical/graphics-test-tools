@@ -55,8 +55,7 @@ apps:
       - x11
     command-chain:
       - bin/graphics-core22-wrapper
-      - glmark2-wrapper
-    command: usr/bin/glmark2-es2
+    command: usr/bin/glmark2-es2 --data-path $SNAP/usr/share/glmark2
 
   glmark2-es2-wayland:
     plugs:
@@ -65,8 +64,7 @@ apps:
     command-chain:
       - bin/graphics-core22-wrapper
       - bin/wayland-launch
-      - glmark2-wrapper
-    command: usr/bin/glmark2-es2-wayland
+    command: usr/bin/glmark2-es2-wayland --data-path $SNAP/usr/share/glmark2
 
   glxinfo:
     plugs:
@@ -108,18 +106,11 @@ apps:
     command: usr/bin/vkcube
 
 parts:
-  glue:
+  scripts:
     plugin: dump
-    source: glue
-
-  mir-kiosk-snap-launch:
-      plugin: dump
-      source: https://github.com/MirServer/mir-kiosk-snap-launch.git
-      override-build:  ${CRAFT_PART_BUILD}/build-with-plugs.sh opengl wayland
-      stage-packages:
-        - inotify-tools
-      stage:
-        - -README.md
+    source: scripts
+    stage-packages:
+      - inotify-tools
 
   drm-info:
     plugin: nil
