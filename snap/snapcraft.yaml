@@ -15,8 +15,6 @@ grade: stable
 confinement: strict
 
 layout:
-  /usr/share/libdrm:  # Needed by mesa-core22 on ARM GPUs
-    bind: $SNAP/graphics/libdrm
   /usr/share/drirc.d:
     bind: $SNAP/graphics/drirc.d
 
