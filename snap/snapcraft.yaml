@@ -6,10 +6,22 @@ description: |
   - drm-info:
     List the capabilities and current settings of this device's DRM
     (Direct Rendering Manager) hardware.
+  - glmark2-es2:
+    OpenGL ES 2.0 X11 benchmark.
   - glmark2-es2-wayland:
     OpenGL ES 2.0 Wayland benchmark.
   - eglinfo:
     Dump information about the available EGL setup.
+  - glxinfo:
+    Dump information about the available GLX setup.
+  - vainfo:
+    Dump information about the available VAAPI (hardware video acceleration) setup.
+  - vdpauinfo:
+    Dump information about the available VDPAU (hardware video acceleration) setup.
+  - vulkaninfo:
+    Dump information about the available Vulkan setup.
+  - vkcube:
+    Test the Vulkan setup.
 
 grade: stable
 confinement: strict
