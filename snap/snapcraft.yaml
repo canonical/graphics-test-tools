@@ -36,18 +36,11 @@ apps:
     plugs:
       - opengl
       - wayland
+      - x11
     command-chain:
       - bin/graphics-core22-wrapper
       - bin/wayland-launch
     command: usr/bin/eglinfo
-
-  eglinfo-x11:
-    command: usr/bin/eglinfo
-    plugs:
-      - opengl
-      - x11
-    command-chain:
-      - bin/graphics-core22-wrapper
 
   glmark2-es2:
     plugs:
