@@ -3,25 +3,33 @@ version: "22.04"
 base: core22
 summary: Tools helpful in debugging graphics stacks
 description: |
-  - drm-info:
+  - drm-info (MIT):
     List the capabilities and current settings of this device's DRM
     (Direct Rendering Manager) hardware.
-  - glmark2-es2:
+  - glmark2-es2 (GPLv3):
     OpenGL ES 2.0 X11 benchmark.
-  - glmark2-es2-wayland:
+  - glmark2-es2-wayland (GPLv3):
     OpenGL ES 2.0 Wayland benchmark.
-  - eglinfo:
+  - eglinfo (MIT):
     Dump information about the available EGL setup.
-  - glxinfo:
+  - glxinfo (MIT):
     Dump information about the available GLX setup.
-  - vainfo:
+  - vainfo (MIT):
     Dump information about the available VAAPI (hardware video acceleration) setup.
-  - vdpauinfo:
+  - vdpauinfo (MIT):
     Dump information about the available VDPAU (hardware video acceleration) setup.
-  - vulkaninfo:
+  - vulkaninfo (Apache-2.0):
     Dump information about the available Vulkan setup.
-  - vkcube:
+  - vkcube (Apache-2.0):
     Test the Vulkan setup.
+
+  This snap uses the graphics-core22 interface to gain support graphics hardware.
+  It can be used to verify custom graphics-core22 provider implementations.
+
+  See https://mir-server.io/docs/the-graphics-core22-snap-interface) for more
+  information.
+website: https://github.com/MirServer/graphics-test-tools
+contact: https://github.com/MirServer/graphics-test-tools/issues
 
 grade: stable
 confinement: strict
