@@ -30,6 +30,7 @@ description: |
   information.
 website: https://github.com/MirServer/graphics-test-tools
 contact: https://github.com/MirServer/graphics-test-tools/issues
+license: Apache-2.0 AND GPL-3.0 AND MIT
 
 grade: stable
 confinement: strict
