@@ -14,6 +14,8 @@ description: |
     Dump information about the available EGL setup.
   - glxinfo (MIT):
     Dump information about the available GLX setup.
+  - kmscube (MIT):
+    Example KMS/GBM/EGL application
   - vainfo (MIT):
     Dump information about the available VAAPI (hardware video acceleration) setup.
   - vdpauinfo (MIT):
@@ -86,6 +88,13 @@ apps:
       - bin/graphics-core22-wrapper
     command: usr/bin/glxinfo
 
+  kmscube:
+    plugs:
+      - opengl
+    command-chain:
+      - bin/graphics-core22-wrapper
+    command: usr/bin/kmscube
+
   vainfo:
     plugs:
       - opengl
@@ -142,6 +151,11 @@ parts:
       - glmark2-es2
       - glmark2-es2-wayland
 
+  kmscube:
+    plugin: nil
+    stage-packages:
+      - kmscube
+
   vainfo:
     plugin: nil
     stage-packages:
@@ -162,6 +176,7 @@ parts:
       - drm-info
       - eglinfo
       - glmark2
+      - kmscube
       - vainfo
       - vdpauinfo
       - vulkan-tools
