@@ -17,6 +17,8 @@ real_wayland=${real_xdg_runtime_dir}/${WAYLAND_DISPLAY:-wayland-0}
 if mkdir -p "$XDG_RUNTIME_DIR" -m 700; then
   ln -sf "${real_wayland}" "$XDG_RUNTIME_DIR"
   ln -sf "${real_wayland}.lock" "$XDG_RUNTIME_DIR"
+else
+  echo "WARNING: XDG_RUNTIME_DIR ($XDG_RUNTIME_DIR) missing, Wayland will not work"
 fi
 
 exec "$@"
