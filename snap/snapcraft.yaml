@@ -40,6 +40,10 @@ confinement: strict
 layout:
   /usr/share/drirc.d:
     bind: $SNAP/graphics/drirc.d
+  /usr/libexec/libinput:
+    symlink: $SNAP/usr/libexec/libinput
+  /usr/share/libinput:
+    symlink: $SNAP/usr/share/libinput
 
 plugs:
   graphics-core22:
@@ -126,6 +130,12 @@ apps:
       - bin/graphics-core22-wrapper
     command: usr/bin/vkcube
 
+  libinput-debug-events:
+    plugs:
+      - hardware-observe
+      - raw-input
+    command: usr/bin/libinput debug-events
+
 parts:
   scripts:
     plugin: dump
@@ -171,6 +181,11 @@ parts:
     stage-packages:
       - vulkan-tools
 
+  libinput-tools:
+    plugin: nil
+    stage-packages:
+      - libinput-tools
+
   graphics-core22:
     after:
       - drm-info
@@ -180,6 +195,7 @@ parts:
       - vainfo
       - vdpauinfo
       - vulkan-tools
+      - libinput-tools
     source: https://github.com/MirServer/graphics-core22.git
     plugin: dump
     override-prime: |
