@@ -68,16 +68,17 @@ parts:
 
   drm-info:
     plugin: meson
-    source: https://github.com/ascent12/drm_info.git
-    source-tag: v2.3.0
+    source: https://gitlab.freedesktop.org/emersion/drm_info.git
+    source-tag: v2.5.0
     build-packages:
       - meson
-      - libdrm-dev
-      - libjson-c-dev
       - libpci-dev
       - pkg-config
+    override-build: |
+      meson subprojects download --sourcedir ${SNAPCRAFT_PART_SRC}
+      snapcraftctl build
     stage-packages:
-      - libdrm2
+      - drm-info
       - libpci3
 
   eglinfo:
