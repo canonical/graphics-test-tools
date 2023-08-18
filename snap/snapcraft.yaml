@@ -3,20 +3,43 @@ version: "20.04"
 base: core20
 summary: Tools helpful in debugging graphics stacks
 description: |
-  - drm-info:
+  - drm-info (MIT):
     List the capabilities and current settings of this device's DRM
     (Direct Rendering Manager) hardware.
-  - glmark2-es2-wayland:
+  - glmark2-es2 (GPLv3):
+    OpenGL ES 2.0 X11 benchmark.
+  - glmark2-es2-wayland (GPLv3):
     OpenGL ES 2.0 Wayland benchmark.
-  - eglinfo:
+  - eglinfo (MIT):
     Dump information about the available EGL setup.
+  - glxinfo (MIT):
+    Dump information about the available GLX setup.
+  - kmscube (MIT):
+    Example KMS/GBM/EGL application
+  - vainfo (MIT):
+    Dump information about the available VAAPI (hardware video acceleration) setup.
+  - vdpauinfo (MIT):
+    Dump information about the available VDPAU (hardware video acceleration) setup.
+  - vulkaninfo (Apache-2.0):
+    Dump information about the available Vulkan setup.
+  - vkcube (Apache-2.0):
+    Test the Vulkan setup.
+
+  This snap uses the graphics-core20 interface to gain support graphics hardware.
+  It can be used to verify custom graphics-core20 provider implementations.
+
+  See https://mir-server.io/docs/the-graphics-core20-snap-interface) for more
+  information.
+website: https://github.com/MirServer/graphics-test-tools
+contact: https://github.com/MirServer/graphics-test-tools/issues
+license: Apache-2.0 AND GPL-3.0 AND MIT
 
 grade: stable
 confinement: strict
 
 environment:
   # Setup EGL from the plugs
-  LD_LIBRARY_PATH:    $SNAP/graphics/lib
+  LD_LIBRARY_PATH:    $SNAP/graphics/lib:$SNAP/usr/local/lib
   LIBGL_DRIVERS_PATH: $SNAP/graphics/dri
   __EGL_VENDOR_LIBRARY_DIRS: $SNAP/graphics/glvnd/egl_vendor.d
 
@@ -42,9 +65,16 @@ apps:
     plugs:
       - opengl
       - wayland
+      - x11
     command-chain:
       - bin/wayland-launch
     command: usr/bin/eglinfo
+
+  glmark2-es2:
+    plugs:
+      - opengl
+      - x11
+    command: usr/bin/glmark2-es2 --data-path $SNAP/usr/share/glmark2
 
   glmark2-es2-wayland:
     plugs:
@@ -52,19 +82,48 @@ apps:
       - wayland
     command-chain:
       - bin/wayland-launch
-    command: glmark2-wayland-wrapper
+    command: usr/bin/glmark2-es2-wayland --data-path $SNAP/usr/share/glmark2
+
+  glxinfo:
+    plugs:
+      - opengl
+      - x11
+    command: usr/bin/glxinfo
+
+  kmscube:
+    plugs:
+      - opengl
+    command: usr/bin/kmscube
+
+  vainfo:
+    plugs:
+      - opengl
+    command: usr/bin/vainfo
+
+  vdpauinfo:
+    plugs:
+      - opengl
+      - x11
+    command: usr/bin/vdpauinfo
+
+  vulkaninfo:
+    plugs:
+      - opengl
+      - x11
+    command: usr/bin/vulkaninfo
+
+  vkcube:
+    plugs:
+      - opengl
+      - x11
+    command: usr/bin/vkcube
 
 parts:
-  glue:
+  scripts:
     plugin: dump
-    source: glue
-
-  mir-kiosk-snap-launch:
-      plugin: dump
-      source: https://github.com/MirServer/mir-kiosk-snap-launch.git
-      override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl wayland
-      stage-packages:
-        - inotify-tools
+    source: scripts
+    stage-packages:
+      - inotify-tools
 
   drm-info:
     plugin: meson
@@ -78,7 +137,6 @@ parts:
       meson subprojects download --sourcedir ${SNAPCRAFT_PART_SRC}
       snapcraftctl build
     stage-packages:
-      - drm-info
       - libpci3
 
   eglinfo:
@@ -91,10 +149,43 @@ parts:
     plugin: nil
     source: .
     stage-packages:
+      - glmark2-es2
       - glmark2-es2-wayland
 
+  glxinfo:
+    plugin: nil
+    stage-packages:
+      - mesa-utils
+
+  kmscube:
+    plugin: nil
+    stage-packages:
+      - kmscube
+
+  vainfo:
+    plugin: nil
+    stage-packages:
+      - vainfo
+
+  vdpauinfo:
+    plugin: nil
+    stage-packages:
+      - vdpauinfo
+
+  vulkan-tools:
+    plugin: nil
+    stage-packages:
+      - vulkan-tools
+
   cleanup:
-    after: [drm-info, eglinfo, glmark2]
+    after:
+      - drm-info
+      - eglinfo
+      - glmark2
+      - kmscube
+      - vainfo
+      - vdpauinfo
+      - vulkan-tools
     plugin: nil
     build-snaps: [ mesa-core20 ]
     override-prime: |
