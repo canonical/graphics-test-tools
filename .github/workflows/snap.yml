@@ -12,15 +12,6 @@ jobs:
 
     timeout-minutes: 30
 
-    strategy:
-      matrix:
-        platform:
-        - amd64
-        - armhf
-        - arm64
-        - ppc64el
-        # Broken: - s390x
-
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -28,9 +19,8 @@ jobs:
         fetch-depth: 0  # needed for version determination
 
     - name: Build and publish the snap
-      uses: canonical/actions/build-snap@multiarch
+      uses: canonical/actions/build-snap@release
       with:
-        architecture: ${{ matrix.platform }}
         snapcraft-token: ${{ secrets.SNAPCRAFT_TOKEN }}
         publish: ${{ github.event_name == 'pull_request' && github.repository == github.event.pull_request.head.repo.full_name }}
         publish-channel: 20/edge/pr${{ github.event.number }}
