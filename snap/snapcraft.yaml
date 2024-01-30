@@ -1,6 +1,7 @@
 name: graphics-test-tools
 version: "24.04"
 base: core24
+build-base: devel
 summary: Tools helpful in debugging graphics stacks
 description: |
   - drm-info (MIT):
@@ -34,7 +35,7 @@ website: https://github.com/MirServer/graphics-test-tools
 contact: https://github.com/MirServer/graphics-test-tools/issues
 license: Apache-2.0 AND GPL-3.0 AND MIT
 
-grade: stable
+grade: devel
 confinement: strict
 
 layout:
@@ -45,7 +46,7 @@ plugs:
   gpu-2404:
     interface: content
     target: $SNAP/gpu
-    default-provider: mesa-2404
+    # default-provider: mesa-2404
 
 apps:
   drm-info:
