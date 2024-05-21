@@ -1,6 +1,6 @@
 name: graphics-test-tools
-version: "22.04"
-base: core22
+version: "24.04"
+base: core24
 summary: Tools helpful in debugging graphics stacks
 description: |
   - drm-info (MIT):
@@ -25,10 +25,10 @@ description: |
   - vkcube (Apache-2.0):
     Test the Vulkan setup.
 
-  This snap uses the graphics-core22 interface to gain support graphics hardware.
-  It can be used to verify custom graphics-core22 provider implementations.
+  This snap uses the gpu-2404 interface to gain support graphics hardware.
+  It can be used to verify custom gpu-2404 provider implementations.
 
-  See https://mir-server.io/docs/the-graphics-core22-snap-interface) for more
+  See https://mir-server.io/docs/the-gpu-2404-snap-interface) for more
   information.
 website: https://github.com/MirServer/graphics-test-tools
 contact: https://github.com/MirServer/graphics-test-tools/issues
@@ -39,13 +39,13 @@ confinement: strict
 
 layout:
   /usr/share/drirc.d:
-    bind: $SNAP/graphics/drirc.d
+    bind: $SNAP/gpu/drirc.d
 
 plugs:
-  graphics-core22:
+  gpu-2404:
     interface: content
-    target: $SNAP/graphics
-    default-provider: mesa-core22
+    target: $SNAP/gpu-2404
+    default-provider: mesa-2404
 
 apps:
   drm-info:
@@ -59,7 +59,7 @@ apps:
       - wayland
       - x11
     command-chain:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
       - bin/wayland-launch
     command: usr/bin/eglinfo
 
@@ -68,7 +68,7 @@ apps:
       - opengl
       - x11
     command-chain:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
     command: usr/bin/glmark2-es2 --data-path $SNAP/usr/share/glmark2
 
   glmark2-es2-wayland:
@@ -76,7 +76,7 @@ apps:
       - opengl
       - wayland
     command-chain:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
       - bin/wayland-launch
     command: usr/bin/glmark2-es2-wayland --data-path $SNAP/usr/share/glmark2
 
@@ -85,21 +85,21 @@ apps:
       - opengl
       - x11
     command-chain:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
     command: usr/bin/glxinfo
 
   kmscube:
     plugs:
       - opengl
     command-chain:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
     command: usr/bin/kmscube
 
   vainfo:
     plugs:
       - opengl
     command-chain:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
     command: usr/bin/vainfo
 
   vdpauinfo:
@@ -107,7 +107,7 @@ apps:
       - opengl
       - x11
     command-chain:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
     command: usr/bin/vdpauinfo
 
   vulkaninfo:
@@ -115,7 +115,7 @@ apps:
       - opengl
       - x11
     command-chain:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
     command: usr/bin/vulkaninfo
 
   vkcube:
@@ -123,7 +123,7 @@ apps:
       - opengl
       - x11
     command-chain:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
     command: usr/bin/vkcube
 
 parts:
@@ -171,7 +171,7 @@ parts:
     stage-packages:
       - vulkan-tools
 
-  graphics-core22:
+  gpu-snap:
     after:
       - drm-info
       - eglinfo
@@ -180,11 +180,11 @@ parts:
       - vainfo
       - vdpauinfo
       - vulkan-tools
-    source: https://github.com/MirServer/graphics-core22.git
+    source: https://github.com/canonical/gpu-snap.git
     plugin: dump
     override-prime: |
       craftctl default
-      ${CRAFT_PART_SRC}/bin/graphics-core22-cleanup mesa-core22
+      ${CRAFT_PART_SRC}/bin/gpu-2404-cleanup mesa-2404
       rm -rf ${CRAFT_PRIME}/usr/share/{doc,man}
     prime:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
