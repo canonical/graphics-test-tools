@@ -168,17 +168,17 @@ parts:
         - libnvidia-compute-535-server
         - nvidia-cuda-toolkit
     override-build: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/bin/
       case $CRAFT_TARGET_ARCH in
       amd64|arm64)
-      make -C Samples/bandwidthTest CUDA_PATH=/usr/lib/nvidia-cuda-toolkit
-      make -C Samples/deviceQuery CUDA_PATH=/usr/lib/nvidia-cuda-toolkit
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/bin/
-      cp bin/*/linux/release/* $SNAPCRAFT_PART_INSTALL/usr/bin/
+        make -C Samples/bandwidthTest CUDA_PATH=/usr/lib/nvidia-cuda-toolkit
+        make -C Samples/deviceQuery CUDA_PATH=/usr/lib/nvidia-cuda-toolkit
+        mkdir -p $SNAPCRAFT_PART_INSTALL/usr/bin/
+        cp bin/*/linux/release/* $SNAPCRAFT_PART_INSTALL/usr/bin/
       ;;
       *)
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/bin/
-      cp /bin/false $SNAPCRAFT_PART_INSTALL/usr/bin/bandwidthTest
-      cp /bin/false $SNAPCRAFT_PART_INSTALL/usr/bin/deviceQuery
+        cp /bin/false $SNAPCRAFT_PART_INSTALL/usr/bin/bandwidthTest
+        cp /bin/false $SNAPCRAFT_PART_INSTALL/usr/bin/deviceQuery
       ;;
       esac
     stage:
