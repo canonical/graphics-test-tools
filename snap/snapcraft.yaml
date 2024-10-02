@@ -162,10 +162,10 @@ parts:
     build-packages:
       - build-essential
       - on amd64:
-        - libnvidia-compute-515-server
+        - libnvidia-compute-535-server
         - nvidia-cuda-toolkit
       - on arm64:
-        - libnvidia-compute-515-server
+        - libnvidia-compute-535-server
         - nvidia-cuda-toolkit
     override-build: |
       case $CRAFT_TARGET_ARCH in
