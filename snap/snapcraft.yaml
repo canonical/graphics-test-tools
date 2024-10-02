@@ -54,14 +54,14 @@ plugs:
     default-provider: mesa-core22
 
 apps:
-  bandwidthTest:
+  cuda-bandwidthTest:
     plugs:
       - opengl
     command-chain:
       - bin/graphics-core22-wrapper
     command: usr/bin/bandwidthTest
 
-  deviceQuery:
+  cuda-deviceQuery:
     plugs:
       - opengl
     command-chain:
