@@ -177,8 +177,8 @@ parts:
         cp bin/*/linux/release/* $SNAPCRAFT_PART_INSTALL/usr/bin/
       ;;
       *)
-        cp /bin/false $SNAPCRAFT_PART_INSTALL/usr/bin/bandwidthTest
-        cp /bin/false $SNAPCRAFT_PART_INSTALL/usr/bin/deviceQuery
+        ln -vs ../../bin/no-cuda $SNAPCRAFT_PART_INSTALL/usr/bin/bandwidthTest
+        ln -vs ../../bin/no-cuda $SNAPCRAFT_PART_INSTALL/usr/bin/deviceQuery
       ;;
       esac
     stage:
