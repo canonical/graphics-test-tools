@@ -24,9 +24,15 @@ description: |
     Dump information about the available Vulkan setup.
   - vkcube (Apache-2.0):
     Test the Vulkan setup.
+  - bandwidthTest (MIT):
+    A sample NVIDIA CUDA application can be used to confirm CUDA operational status.
+    (needs nvidia-core22)
+  - deviceQuery (MIT):
+    Query NVIDIA CUDA hardware configuration. (needs nvidia-core22)
 
   This snap uses the gpu-2404 interface to gain support graphics hardware.
   It can be used to verify custom gpu-2404 provider implementations.
+  The CUDA specific apps require NVIDIA capable provider, such as nvidia-2404.
 
   See https://mir-server.io/docs/the-gpu-2404-snap-interface) for more
   information.
@@ -48,6 +54,22 @@ plugs:
     default-provider: mesa-2404
 
 apps:
+  cuda-bandwidthTest:
+    plugs:
+      - network-bind
+      - opengl
+    command-chain:
+      - bin/gpu-2404-wrapper
+    command: usr/bin/bandwidthTest
+
+  cuda-deviceQuery:
+    plugs:
+      - network-bind
+      - opengl
+    command-chain:
+      - bin/gpu-2404-wrapper
+    command: usr/bin/deviceQuery
+
   drm-info:
     plugs:
       - opengl
@@ -133,6 +155,38 @@ parts:
     stage-packages:
       - inotify-tools
 
+  cuda-samples:
+    source: https://github.com/NVIDIA/cuda-samples
+    source-tag: v11.5
+    source-type: git
+    source-depth: 1
+    plugin: nil
+    build-packages:
+      - build-essential
+      - on amd64:
+        - libnvidia-compute-535-server
+        - nvidia-cuda-toolkit
+      - on arm64:
+        - libnvidia-compute-535-server
+        - nvidia-cuda-toolkit
+    override-build: |
+      mkdir -p ${CRAFT_PART_INSTALL}/usr/bin/
+      case ${CRAFT_ARCH_BUILD_FOR} in
+      amd64|arm64)
+        make -C Samples/bandwidthTest CUDA_PATH=/usr/lib/nvidia-cuda-toolkit
+        make -C Samples/deviceQuery CUDA_PATH=/usr/lib/nvidia-cuda-toolkit
+        mkdir -p ${CRAFT_PART_INSTALL}/usr/bin/
+        cp bin/*/linux/release/deviceQuery bin/*/linux/release/bandwidthTest ${CRAFT_PART_INSTALL}/usr/bin/
+      ;;
+      *)
+        ln -vs ../../bin/no-cuda ${CRAFT_PART_INSTALL}/usr/bin/bandwidthTest
+        ln -vs ../../bin/no-cuda ${CRAFT_PART_INSTALL}/usr/bin/deviceQuery
+      ;;
+      esac
+    stage:
+      - usr/bin/bandwidthTest
+      - usr/bin/deviceQuery
+
   drm-info:
     plugin: nil
     stage-packages:
@@ -173,6 +227,7 @@ parts:
 
   gpu-snap:
     after:
+      - cuda-samples
       - drm-info
       - eglinfo
       - glmark2
