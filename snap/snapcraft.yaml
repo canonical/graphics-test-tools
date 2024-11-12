@@ -157,7 +157,7 @@ parts:
 
   cuda-samples:
     source: https://github.com/NVIDIA/cuda-samples
-    source-tag: v11.5
+    source-tag: v12.5
     source-type: git
     source-depth: 1
     plugin: nil
@@ -173,8 +173,8 @@ parts:
       mkdir -p ${CRAFT_PART_INSTALL}/usr/bin/
       case ${CRAFT_ARCH_BUILD_FOR} in
       amd64|arm64)
-        make -C Samples/bandwidthTest CUDA_PATH=/usr/lib/nvidia-cuda-toolkit
-        make -C Samples/deviceQuery CUDA_PATH=/usr/lib/nvidia-cuda-toolkit
+        make -C Samples/1_Utilities/bandwidthTest CUDA_PATH=/usr/lib/nvidia-cuda-toolkit
+        make -C ./Samples/1_Utilities/deviceQuery CUDA_PATH=/usr/lib/nvidia-cuda-toolkit
         mkdir -p ${CRAFT_PART_INSTALL}/usr/bin/
         cp bin/*/linux/release/deviceQuery bin/*/linux/release/bandwidthTest ${CRAFT_PART_INSTALL}/usr/bin/
       ;;
