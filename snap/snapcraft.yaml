@@ -37,10 +37,6 @@ license: Apache-2.0 AND GPL-3.0 AND MIT
 grade: stable
 confinement: strict
 
-layout:
-  /usr/share/drirc.d:
-    bind: $SNAP/gpu/drirc.d
-
 plugs:
   gpu-2604:
     interface: content
