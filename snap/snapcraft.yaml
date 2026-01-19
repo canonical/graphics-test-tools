@@ -1,6 +1,7 @@
 name: graphics-test-tools
 version: "26.04"
 base: core26
+build-base: devel
 summary: Tools helpful in debugging graphics stacks
 description: |
   - drm-info (MIT):
@@ -34,14 +35,14 @@ website: https://github.com/MirServer/graphics-test-tools
 contact: https://github.com/MirServer/graphics-test-tools/issues
 license: Apache-2.0 AND GPL-3.0 AND MIT
 
-grade: stable
+grade: devel
 confinement: strict
 
 plugs:
   gpu-2604:
     interface: content
     target: $SNAP/gpu-2604
-    default-provider: mesa-2604
+#    default-provider: mesa-2604
 
 apps:
   drm-info:
@@ -177,6 +178,7 @@ parts:
       - vdpauinfo
       - vulkan-tools
     source: https://github.com/canonical/gpu-snap.git
+    source-branch: core26
     plugin: dump
     override-prime: |
       craftctl default
