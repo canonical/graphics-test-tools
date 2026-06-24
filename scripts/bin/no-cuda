@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "CUDA is only supported on amd64 and arm64" >&2
+
+exit 1
