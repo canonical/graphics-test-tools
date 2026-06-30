@@ -77,6 +77,7 @@ apps:
     command: usr/bin/glxinfo
 
   kmscube:
+    extensions: [gpu]
     plugs:
       - opengl
     command: usr/bin/kmscube
